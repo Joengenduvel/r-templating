@@ -1,6 +1,9 @@
 library(ggplot2)
 library(dplyr)
 
+script.dir <- dirname(sys.frame(1)$ofile)
+setwd(script.dir)
+
 df_pathway <- read.csv("../data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-1.csv")
 df_count <- read.csv("../data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-2.csv")
 
@@ -130,4 +133,4 @@ list1 <- list(name = "Subcategories integrated", language.dutch = function() { s
 list2 <- list(name = "Cumulative Species", language.dutch = function() { cumulativeSpecies }, language.english = function() { cumulativeSpeciesEnglish})
 #list2 <- list(name = "Cumulative Species", language.dutch = function() { cumulativeSpeciesTranslated(tranlation, "english") }, language.english = function() {})
 data_information <- list(list1, list2)
-rmarkdown::render("bedreiging-door-nieuwe-uitheemse-diersoorten.Rmd", output_file = "../test/html/bedreiging-door-nieuwe-uitheemse-diersoorten.html")
+rmarkdown::render("template.Rmd", output_file = "../html-files/bedreiging-door-nieuwe-uitheemse-diersoorten.html")
