@@ -1,0 +1,94 @@
+---
+title: "Europese vlinderindex (graslanden)"
+author: "Stijn Van Hoey"
+date: "September 13, 2016"
+output: html_document
+keyword: visualisation, nara, indicators
+---
+
+
+```{r, include=FALSE}
+# cfr. https://www.inbo.be/nl/natuurindicator/europese-vlinderindex-graslanden
+# run to html with command:
+#rmarkdown::render("europese-vlinderindex-graslanden.Rmd", output_file = "../reports/html/europese-vlinderindex-graslanden.html") 
+library(ggplot2)
+library(dplyr)
+library(INBOtheme)
+
+df <- read.csv("../data/processed/europese-vlinderindex-graslanden.csv")
+```
+
+## Definitie
+
+In het kader van SEBI 2010-doelstellingen ontwikkelde de Nederlandse Vlinderstichting een Europese index voor graslandvlinders, gebaseerd op 7 wijdverspreide (argusvlinder, bruin zandoogje, groot dikkopje, hooibeestje, icarusblauwtje, kleine vuurvlinder en oranjetipje) en 10 zeldzame graslandvlinders (adonisblauwtje, bleek blauwtje, bruin dikkopje, donker pimpernelblauwtje, dwergblauwtje, dwergdikkopje, kalkgraslanddikkopje, klaverblauwtje, moerasparelmoervlinder en tijmblauwtje - van Swaay et al. 2015). In Vlaanderen zijn enkel voldoende gegevens beschikbaar voor 5 wijdverspreide soorten: bruin zandoogje, groot dikkopje, icarusblauwtje, kleine vuurvlinder en oranjetipje. De index geeft de veranderingen tussen jaren aan waarbij het referentiejaar 1992 op 100 werd gezet.
+
+## Evolutie van de afzonderlijke soorten
+
+```{r, echo=FALSE, fig.width=9, fig.height=14}
+
+data_plot1  <- filter(df, !Soort %in% c("Index", "doel MINA-plan 4",
+                                        "hooibeestje", "argusvlinder"))
+
+ggplot(data_plot1, aes(x = year, y = grasland_index,
+                       group = Soort)) +
+            geom_point() +
+            geom_line() +
+            facet_grid(Soort ~ .) +
+            theme(strip.text.y = element_text(size = 13),
+                  text = element_text(size = 12)) + 
+            ylab("Graslandvlinder Index (100% defines situation in 1991)") + 
+            scale_x_continuous(pretty(data_plot1$year, n = 5), name = "")
+
+```
+
+## Evolutie van Argusvlinder en Hooibeestje
+
+```{r, echo=FALSE, fig.width=10, fig.height=10}
+data_plot2  <- filter(df, Soort %in% c("hooibeestje", "argusvlinder"))
+ggplot(data_plot2, aes(x = year, y = grasland_index,
+                       group = Soort, colour = Soort)) +
+            geom_point() +
+            geom_line() +
+            theme(legend.title = element_blank(),
+                  legend.position = "top",
+                  legend.text = element_text(size = 14),
+                  text = element_text(size = 12)) + 
+            ylab("Graslandvlinder Index (100% defines situation in 1991)") +
+            scale_x_continuous(pretty(data_plot2$year, n = 5), name = "")
+```
+
+
+## Evolutie van de vlinderindex graslanden
+
+```{r, echo=FALSE, fig.width=12, fig.height=10}
+data_plot3  <- filter(df, Soort %in% c("Index", "doel MINA-plan 4"))
+MINA_plan_4_value <- df[df$Soort == "doel MINA-plan 4" & df$year == 2015, 
+                        "grasland_index"]
+
+ggplot(data_plot3, aes(x = year, y = grasland_index, colour = Soort)) +
+            geom_point() +
+            geom_line() +
+            annotate("text", x = 2013.5, y = 168, 
+                     label = "doel MINA plan 4 (2015)", 
+                     size = 5, color = INBOdarkgreen) + 
+            geom_segment(aes(x = 2014, y = 170, xend = 2014.8, yend = 180), 
+                         color = INBOdarkgreen, size = 0.5,
+                         arrow = arrow(length = unit(0.3, "cm"))) +    
+            theme(legend.position = "none",
+                  text = element_text(size = 14)) + 
+            ylab("Graslandvlinder Index (100% defines situation in 1991)") +
+            scale_x_continuous(pretty(data_plot3$year, n = 5), name = "")
+
+```
+
+## Bespreking
+
+De Vlaamse graslandvlinderindex vertoont een wisselend verloop. De samengestelde indicator daalt licht gedurende de eerste 10 jaar van de monitoring maar schommelt sindsdien sterk. Twee soorten dalen beduidend (bruin zandoogje en groot dikkopje), twee soorten blijven stabiel (icarusblauwtje en kleine vuurvlinder) en een soort (oranjetipje) neemt beduidend toe. Voor de overige twee soorten (argusvlinder en hooibeestje) zijn er relatief weinig vlinderroutes. Het hooibeestje lijkt min of meer stabiel te blijven, maar de argusvlinder toont een bijzonder sterke achteruitgang (Van Dyck et al. 2015).
+
+## Beleidsdoelen
+
+* Streefdoel 2 EU 2020 biodiversiteitsstrategie:Tegen 2020 worden ecosystemen en ecosysteemdiensten gehandhaafd en verbeterd door groene infrastructuur op te zetten en ten minste 15 % van de aangetaste ecosystemen te herstellen.
+* Plandoelstelling MINA-plan 4: In 2015 is de toestand van bedreigde en beschermde soortengroepen verbeterd: + 10% t.o.v. 2004.
+* PACT2020 15.1 Inzake biodiversiteit kan Vlaanderen in 2020 de vergelijking met de Europese economische topregio's aan.
+* SEBI 01 Abundance and distribution of selected species
+

@@ -1,0 +1,56 @@
+---
+title: "rodelijst_zoetwater"
+author: "Stijn Van Hoey"
+date: "September 13, 2016"
+output: html_document
+keyword: visualisation, nara, indicators
+---
+
+```{r, include=FALSE}
+# cfr. https://www.inbo.be/nl/natuurindicator/europese-vlinderindex-graslanden
+# To render, run rmarkdown::render("rodelijst-zoetwater.Rmd", output_file = "../reports/html/rodelijst-zoetwater.html")
+
+library(ggplot2)
+library(INBOtheme)
+
+df <- read.csv("../data/processed/rodelijst-zoetwatervissen.csv")
+```
+
+## Definitie 
+Rode Lijsten geven aan hoe groot de kans is dat een soort zal uitsterven in Vlaanderen. De laatste, regionale IUCN-criteria (IUCN, 2003) worden toegepast op 42 inheemse zoetwatervissoorten in Vlaanderen om ze te categoriseren in Rode Lijst categorieën.
+
+## Zoetwatervissen Rode lijst
+
+```{r, echo=FALSE, fig.width=12, fig.height=10}
+
+df$categorie <- factor(df$categorie, ordered = TRUE,
+                       levels = c("momenteel niet in gevaar",
+                                  "kwetsbaar",
+                                  "bijna in gevaar",
+                                  "bedreigd",
+                                  "ernstig bedreigd",
+                                  "regionaal uitgestorven",
+                                  "onvoldoende data"))
+
+ggplot(df, aes(x = categorie)) +
+    geom_bar(stat = "identity", aes(y = aantal)) + 
+    xlab("") +
+    geom_text(aes(label = aantal), y = -0.1, vjust = 0.5,
+              size = 8, angle = 0, hjust = 1.) +
+    coord_flip() +
+    theme(axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16))
+```
+
+## Bespreking
+
+Van de 42 geëvalueerde zoetwatervissen en prikken worden 3 soorten als ‘Regionaal uitgestorven’ beschouwd terwijl 7 ‘Ernstig bedreigd’, 3 ‘Bedreigd’ en 8 ‘Kwetsbaar’ zijn. Daarnaast worden 5 soorten beoordeeld als ‘Bijna in gevaar’, 15 soorten als ‘Momenteel niet in gevaar’ en één soort komt terecht in de categorie ‘Onvoldoende data’ . In totaal wordt 62 % van de zoetwatervissen in Vlaanderen als bedreigd of uitgestorven beschouwd (Verreycken et al., 2012; 2013). Recent verbeterde rioolwaterzuivering heeft geleid tot de verbetering van de waterkwaliteit van het Schelde-estuarium waardoor enkele diadrome soorten zoals fint en zeeprik opnieuw in Vlaanderen voorkomen. Aldus verdwijnen ze uit de categorie ‘Regionaal uitgestorven’. Ten gevolge van enkele herintroductieprogramma’s doen serpeling en kopvoorn het opmerkelijk goed terwijl kwabaal hierdoor uit de categorie ‘Regionaal uitgestorven’ kon worden gehaald. Een opvallende achteruitgang kent de paling die in de categorie ‘Ernstig bedreigd’ komt ondanks de jaarlijkse bepotingen met glasaal. Het verdwijnen en achteruitgaan van soorten is een gevolg van de achteruitgang van de kwantiteit (oppervlakte geschikt habitat) en kwaliteit van de habitat van de soorten.
+
+## Beleidsdoelen
+
+Streefdoel 1 EU 2020 biodiversiteitsstrategie: De achteruitgang in de status van alle onder natuurwetgeving van de EU vallende soorten en habitats tot staan brengen en een aanzienlijke en meetbare verbetering van hun status bereiken zodat tegen 2020, vergeleken met huidige beoordelingen: (i) 100 % meer habitatbeoordelingen en 50 % meer soortenbeoordelingen in het kader van de habitatrichtlijn een verbeterde staat van instandhouding te geven; en (ii) uit 50 % meer soortenbeoordelingen in het kader van de vogelrichtlijn een veilige of verbeterde staat van instandhouding blijkt.
+
+
+
+
+
