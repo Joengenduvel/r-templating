@@ -2,92 +2,55 @@
 title: "Bedreiging-door-nieuwe-uitheemse-diersoorten"
 author: "Dieter Sneyders"
 date: "21 November, 2016"
-output:
+output: 
+#  md_document
+  rmarkdown::html_vignette:
+    css: 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Bedreiging-door-nieuwe-uitheemse-diersoorten}
+  %\VignetteEncoding{UTF-8}
   html_document: 
-    css: 'css/base.css'
-  pdf_document: default
+#    css: 'css/base.css'
+#  pdf_document: default
 ---
+<SCRIPT language="JavaScript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<SCRIPT language="JavaScript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-# run to html with command:
-#rmarkdown::render("bedreiging-door-nieuwe-uitheemse-diersoorten.Rmd", output_file = "../test/html/bedreiging-door-nieuwe-uitheemse-diersoorten.html")
-#source("uitheemse-dieren.R")
-#library(INBOtheme)
+<script>
+$( function() {
+    $( "#tabs" ).tabs();
+  } );
+</script>
+<div id='tabs'>
+<ul>
+```{r, out.extra = 'angle=-90',fig.width=12, fig.height=13,echo = FALSE, message = TRUE, warning = FALSE, results = 'asis'}
+#options(markdown.HTML.options = "fragment_only")
+#
+#for (i in 1:length(data_information)) {
+#  print(paste("##",data_information[[i]]$name, "{.tabset}",sep = " "))
+#  print("###Dutch")
+#  data_information[[i]]$language.dutch()
+#  print("###English")
+#  data_information[[i]]$language.english()
+#}
 
+options(markdown.HTML.options = "fragment_only")
 
-```
+ for (i in 1:length(data_information)) {
+      title <- paste("<li><a href='#tabs-",i, "'>",data_information[[i]]$name , "</a></li>",sep = "")
+      cat(title)
+ }
+cat("</ul>")
 
-## Informatie {.tabset}
-
-### Testdata
-
-```{r, out.extra = 'angle=-90',fig.width=12, fig.height=13,echo = TRUE, message = TRUE, warning = TRUE}
-
-for (i in 1:length(data_information)) {
-  print(data_information[[i]]$name)
-  print(data_information[[i]]$language.dutch())
-  print(data_information[[i]]$language.english())
+ for (i in 1:length(data_information)) {
+   div <- paste("<div id='tabs-",i, "'>",sep = "")
+  cat(div)
+   cat("<h3>Dutch</h3>")
+   plot(data_information[[i]]$language.dutch())
+   cat("<h3>English</h3>")
+  plot(data_information[[i]]$language.english())
+  cat("</div>")
 }
-
-
 ```
-
-### Subcategories integrated 
-
-
-```{r, out.extra = 'angle=-90', echo = FALSE, fig.width=12, fig.height=13, message = FALSE, warning = FALSE}
-# ISSUE: figure need to be turned 90 degrees... ok in pdf, not in html
-
-# Create the graph with subcategories
-
-subcategoriesIntegrated
-```
-
-### Only categories
-
-English version
-```{r, out.extra = 'angle=-90', echo = FALSE, fig.width=12, fig.height=13, message = FALSE, warning = FALSE}
-# ISSUE: figure need to be turned 90 degrees... ok in pdf, not in html
-
-# Create the graph with subcategories
-subcategoriesIntegratedEnglish
-```
-
-Nederlandse versie
-```{r, out.extra = 'angle=-90', echo = FALSE, fig.width=12, fig.height=13, message = FALSE, warning = FALSE}
-# ISSUE: figure need to be turned 90 degrees... ok in pdf, not in html
-
-# Create the graph with subcategories
-ggplot(df_pathway,  aes(x = reorder(category_nl, freq, function(x){sum(x)}),
-                    y = freq, fill = kingdom)) +
-    geom_bar(stat = "summary", fun.y = sum,
-             width = .65) + 
-    xlab("Introductieweg") +
-    ylab("Aantal soorten") + 
-    coord_flip() +
-    scale_fill_discrete(labels = c("Dieren", "Planten"), 
-                        breaks = c("Animalia", "Plantae")) + 
-    theme(legend.position = "top",
-          legend.title = element_blank()
-          )
-```
-
-
-
-### Cumulative number of species in time 
-
-English version
-```{r, echo=FALSE, fig.width=9, fig.height=14, warning = FALSE, message = FALSE}
-cumulativeSpeciesEnglish
-```
-
-Dutch version
-```{r, echo=FALSE, fig.width=9, fig.height=14, warning = FALSE, message = FALSE}
-
-cumulativeSpecies
-```
-
-
-
-
-
+</div>

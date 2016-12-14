@@ -1,5 +1,6 @@
 library(ggplot2)
 library(dplyr)
+library(markdown)
 
 script.dir <- dirname(sys.frame(1)$ofile)
 setwd(script.dir)
@@ -133,4 +134,6 @@ list1 <- list(name = "Subcategories integrated", language.dutch = function() { s
 list2 <- list(name = "Cumulative Species", language.dutch = function() { cumulativeSpecies }, language.english = function() { cumulativeSpeciesEnglish})
 #list2 <- list(name = "Cumulative Species", language.dutch = function() { cumulativeSpeciesTranslated(tranlation, "english") }, language.english = function() {})
 data_information <- list(list1, list2)
+#rmarkdown::html_vignette("template.Rmd", output_file = "../html-files/bedreiging-door-nieuwe-uitheemse-diersoorten.html")
 rmarkdown::render("template.Rmd", output_file = "../html-files/bedreiging-door-nieuwe-uitheemse-diersoorten.html")
+#rmarkdown::run("template.Rmd")
